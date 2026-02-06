@@ -400,7 +400,7 @@ This project is open source and available under the [MIT License](LICENSE).
 - 💼 LinkedIn: [linkedin.com/in/omorullas](https://linkedin.com/in/omorullas)
 - 🐙 GitHub: [@omorfarukullas](https://github.com/omorfarukullas)
 - 🐦 Twitter: [@berlinsergio34](https://x.com/berlinsergio34)
-- ✉️ Email: your.email@example.com
+- ✉️ Email: omor.farukh16@gmail.com
 
 ---
 
