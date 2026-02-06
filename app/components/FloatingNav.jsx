@@ -22,13 +22,12 @@ export default function FloatingNav() {
     const [particles, setParticles] = useState([]);
     const { playSound } = useSound();
 
-    // Generate tech particles
+    // Simplified particles for performance - static or minimal movement
     useEffect(() => {
-        const newParticles = Array.from({ length: 15 }, (_, i) => ({
+        const newParticles = Array.from({ length: 8 }, (_, i) => ({
             id: i,
             x: Math.random() * 100,
-            delay: Math.random() * 1.5,
-            duration: Math.random() * 1.5 + 1,
+            y: Math.random() * 100,
             size: Math.random() * 2 + 1,
         }));
         setParticles(newParticles);
@@ -119,40 +118,17 @@ export default function FloatingNav() {
                         }}
                     />
 
-                    {/* Animated scanning line */}
-                    <motion.div
-                        animate={{ x: ['-100%', '200%'] }}
-                        transition={{
-                            duration: 4,
-                            repeat: Infinity,
-                            ease: 'linear',
-                        }}
-                        className="absolute top-0 bottom-0 w-1/3 bg-gradient-to-r from-transparent via-cyber-purple/20 to-transparent"
-                        style={{
-                            filter: 'blur(20px)',
-                        }}
-                    />
+                    {/* Scanning line removed for performance */}
 
-                    {/* Floating particles in nav */}
+                    {/* Floating particles in nav - simplified for Performance Mode */}
                     {particles.map((particle) => (
-                        <motion.div
+                        <div
                             key={particle.id}
-                            className="absolute w-1 h-1 rounded-full"
+                            className="absolute w-1 h-1 rounded-full opacity-30"
                             style={{
                                 left: `${particle.x}%`,
+                                top: `${particle.y}%`,
                                 background: particle.id % 2 === 0 ? '#8b5cf6' : '#06b6d4',
-                                boxShadow: `0 0 ${particle.size * 3}px ${particle.id % 2 === 0 ? '#8b5cf6' : '#06b6d4'}`,
-                            }}
-                            animate={{
-                                y: [0, -20, 0],
-                                opacity: [0.3, 0.8, 0.3],
-                                scale: [1, 1.5, 1],
-                            }}
-                            transition={{
-                                duration: particle.duration,
-                                repeat: Infinity,
-                                delay: particle.delay,
-                                ease: 'easeInOut',
                             }}
                         />
                     ))}
@@ -163,17 +139,7 @@ export default function FloatingNav() {
 
                 {/* Bottom complex border */}
                 <div className="absolute bottom-0 left-0 right-0 h-[1px] overflow-hidden">
-                    <motion.div
-                        animate={{
-                            background: [
-                                'linear-gradient(90deg, transparent, #8b5cf6, #06b6d4, transparent)',
-                                'linear-gradient(90deg, transparent, #06b6d4, #8b5cf6, transparent)',
-                                'linear-gradient(90deg, transparent, #8b5cf6, #06b6d4, transparent)',
-                            ],
-                        }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        className="h-full"
-                    />
+                    <div className="h-full bg-gradient-to-r from-cyber-purple/50 via-neon-cyan/50 to-cyber-purple/50" />
                 </div>
 
                 {/* Corner accents */}
@@ -223,7 +189,7 @@ export default function FloatingNav() {
                                     className="relative"
                                     initial={{ opacity: 0, y: -20 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: index * 0.1 }}
+                                    transition={{ duration: 0.18, delay: index * 0.02, ease: 'easeOut' }}
                                 >
                                     <motion.a
                                         href={item.href}
@@ -231,7 +197,7 @@ export default function FloatingNav() {
                                         onMouseEnter={() => playSound('hover')}
                                         className="relative px-4 py-2 group"
                                         whileHover={{ y: -3 }}
-                                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                                        transition={{ duration: 0.15, ease: 'easeOut' }}
                                     >
                                         {/* Holographic background on hover/active */}
                                         <motion.div
@@ -250,7 +216,7 @@ export default function FloatingNav() {
                                                         'linear-gradient(45deg, transparent, rgba(139, 92, 246, 0.1), transparent)',
                                                     ],
                                                 }}
-                                                transition={{ duration: 1.5, repeat: Infinity }}
+                                                transition={{ duration: 0.18, ease: 'easeOut' }}
                                             />
                                         </motion.div>
 
@@ -274,9 +240,8 @@ export default function FloatingNav() {
                                                         opacity: [0, 0.5, 0.5, 0],
                                                     }}
                                                     transition={{
-                                                        duration: 0.3,
-                                                        repeat: Infinity,
-                                                        repeatDelay: 3,
+                                                        duration: 0.18,
+                                                        ease: 'easeOut',
                                                     }}
                                                 >
                                                     {item.name}
@@ -318,7 +283,7 @@ export default function FloatingNav() {
                                                         '0 0 20px rgba(6, 182, 212, 0.2)',
                                                     ],
                                                 }}
-                                                transition={{ duration: 1, repeat: Infinity }}
+                                                transition={{ duration: 0.18, ease: 'easeOut' }}
                                             />
                                         )}
                                     </motion.a>

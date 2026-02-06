@@ -5,6 +5,7 @@ import { motion, useInView } from 'framer-motion';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { useSound } from '../hooks/useSoundEffects';
 import { useMobile } from '../hooks/useMobile';
+import { usePerformance } from './PerformanceProvider';
 
 const subjectOptions = [
     "Collaboration",
@@ -135,7 +136,7 @@ export default function ContactSection() {
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    transition={{ duration: 0.18, ease: "easeOut" }}
                     className="text-center mb-12"
                 >
                     <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 font-[family-name:var(--font-orbitron)]">
@@ -151,7 +152,7 @@ export default function ContactSection() {
                     <motion.div
                         initial={{ scaleX: 0 }}
                         animate={isInView ? { scaleX: 1 } : {}}
-                        transition={{ duration: 0.6, delay: 0.2 }}
+                        transition={{ duration: 0.18, delay: 0.05 }}
                         className="mt-6 mx-auto w-24 h-[2px] bg-gradient-to-r from-cyber-purple to-neon-cyan"
                     />
                 </motion.div>
@@ -161,7 +162,7 @@ export default function ContactSection() {
                     ref={formRef}
                     initial={{ opacity: 0, y: 40 }}
                     animate={isFormInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.8, delay: 0.2 }}
+                    transition={{ duration: 0.18, delay: 0.1 }}
                 >
                     <form
                         onSubmit={handleSubmit}
@@ -403,12 +404,12 @@ export default function ContactSection() {
                                             ? 'linear-gradient(135deg, #ef4444, #dc2626)'
                                             : 'linear-gradient(135deg, #8b5cf6, #06b6d4)',
                                     boxShadow: submitState === 'idle'
-                                        ? '0 8px 25px rgba(139, 92, 246, 0.3)'
+                                        ? '0 4px 15px rgba(139, 92, 246, 0.3)'
                                         : submitState === 'success'
                                             ? '0 8px 35px rgba(34, 197, 94, 0.4)'
                                             : submitState === 'error'
                                                 ? '0 8px 25px rgba(239, 68, 68, 0.3)'
-                                                : '0 8px 25px rgba(139, 92, 246, 0.3)',
+                                                : '0 4px 15px rgba(139, 92, 246, 0.3)',
                                 }}
                             >
                                 {/* Subtle gradient overlay on hover */}
@@ -477,7 +478,7 @@ export default function ContactSection() {
                     ref={socialRef}
                     initial={{ opacity: 0 }}
                     animate={isSocialInView ? { opacity: 1 } : {}}
-                    transition={{ duration: 0.6, delay: 0.35 }}
+                    transition={{ duration: 0.18, delay: 0.15 }}
                     className="mt-16"
                 >
                     <h3 className="text-center text-2xl font-bold mb-8 bg-gradient-to-r from-cyber-purple to-neon-cyan bg-clip-text text-transparent">
@@ -612,6 +613,7 @@ function SocialConstellation() {
     const [hoveredIcon, setHoveredIcon] = useState(null);
     const [clickedIcon, setClickedIcon] = useState(null);
     const isMobile = useMobile();
+    const { isReduced } = usePerformance();
 
     const socialLinks = [
         {
@@ -750,7 +752,7 @@ function SocialConstellation() {
                             rotate: i % 2 === 0 ? 360 : -360,
                         }}
                         transition={{
-                            duration: 30 + i * 10,
+                            duration: isReduced ? 0 : 40 + i * 10,
                             repeat: Infinity,
                             ease: 'linear',
                         }}

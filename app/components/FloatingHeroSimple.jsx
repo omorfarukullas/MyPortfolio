@@ -104,9 +104,9 @@ export default function FloatingHeroSimple() {
                         opacity: [0.3, 0.5, 0.3],
                     }}
                     transition={{
-                        duration: 2,
+                        duration: 1, // Snappier pulse
                         repeat: Infinity,
-                        ease: 'easeInOut',
+                        ease: 'easeOut',
                     }}
                     className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] md:w-[800px] md:h-[800px] bg-cyber-purple/30 rounded-full blur-[100px]"
                 />
@@ -116,10 +116,10 @@ export default function FloatingHeroSimple() {
                         opacity: [0.2, 0.4, 0.2],
                     }}
                     transition={{
-                        duration: 2.5,
+                        duration: 1.2,
                         repeat: Infinity,
-                        ease: 'easeInOut',
-                        delay: 0.3,
+                        ease: 'easeOut',
+                        delay: 0.1,
                     }}
                     className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] md:w-[600px] md:h-[600px] bg-neon-cyan/30 rounded-full blur-[80px]"
                 />
@@ -133,7 +133,7 @@ export default function FloatingHeroSimple() {
                 ref={contentRef}
                 initial={{ opacity: 0, y: 50, scale: 0.95 }}
                 animate={isContentInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 50, scale: 0.95 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.18, ease: 'easeOut' }}
                 style={{
                     x: mousePosition.x,
                     y: mousePosition.y,
@@ -146,15 +146,15 @@ export default function FloatingHeroSimple() {
                         y: [0, -10, 0],
                     }}
                     transition={{
-                        duration: 1.5,
+                        duration: 0.8,
                         repeat: Infinity,
-                        ease: 'easeInOut',
+                        ease: 'easeOut',
                     }}
                 >
                     <motion.h1
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.6, delay: 0.1 }}
+                        transition={{ duration: 0.18, delay: 0.02, ease: 'easeOut' }}
                         className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-4 relative"
                     >
                         <span className="relative inline-block">
@@ -168,7 +168,7 @@ export default function FloatingHeroSimple() {
                     <motion.h1
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
+                        transition={{ duration: 0.18, delay: 0.05, ease: 'easeOut' }}
                         className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold relative"
                     >
                         <span className="relative inline-block">
@@ -184,7 +184,7 @@ export default function FloatingHeroSimple() {
                 <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
+                    transition={{ duration: 0.18, delay: 0.1, ease: 'easeOut' }}
                     className="mt-6 text-lg sm:text-xl md:text-2xl text-foreground/80 font-light tracking-wider"
                 >
                     Developer • Designer • Creator
@@ -194,7 +194,7 @@ export default function FloatingHeroSimple() {
                 <motion.div
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: 1 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
+                    transition={{ duration: 0.18, delay: 0.15, ease: 'easeOut' }}
                     className="mt-8 flex items-center justify-center gap-4"
                 >
                     <div className="h-px w-16 sm:w-24 bg-gradient-to-r from-transparent via-cyber-purple to-transparent" />
@@ -207,7 +207,7 @@ export default function FloatingHeroSimple() {
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.5, duration: 0.6 }}
+                transition={{ delay: 0.2, duration: 0.18, ease: 'easeOut' }}
                 className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
             >
                 <motion.div

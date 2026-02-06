@@ -36,22 +36,22 @@ export default function LoadingScreen({ onComplete }) {
             return;
         }
 
-        // Stage 1: Particles (2s)
+        // Stage 1: Particles (300ms)
         const particlesTimer = setTimeout(() => {
             setLoadingStage('name');
-        }, 2000);
+        }, 300);
 
-        // Stage 2: Name (1s after particles)
+        // Stage 2: Name (100ms after particles)
         const nameTimer = setTimeout(() => {
             setLoadingStage('subtitle');
-        }, 3000);
+        }, 400);
 
-        // Stage 3: Subtitle (0.5s after name)
+        // Stage 3: Subtitle (50ms after name)
         const subtitleTimer = setTimeout(() => {
             setLoadingStage('loading');
-        }, 3500);
+        }, 450);
 
-        // Stage 4: Loading bar
+        // Stage 4: Loading bar (Fast progress)
         const loadingTimer = setTimeout(() => {
             const interval = setInterval(() => {
                 setProgress(prev => {
@@ -59,12 +59,12 @@ export default function LoadingScreen({ onComplete }) {
                         clearInterval(interval);
                         return 100;
                     }
-                    return prev + 2;
+                    return prev + 10; // Much faster steps
                 });
-            }, 20);
+            }, 16); // ~60fps interval
 
             return () => clearInterval(interval);
-        }, 3500);
+        }, 450);
 
         return () => {
             clearTimeout(particlesTimer);
@@ -81,7 +81,7 @@ export default function LoadingScreen({ onComplete }) {
                 setIsVisible(false);
                 localStorage.setItem('hasVisitedPortfolio', 'true');
                 onComplete();
-            }, 500);
+            }, 100); // Fast exit
         }
     }, [progress, onComplete]);
 
@@ -98,7 +98,7 @@ export default function LoadingScreen({ onComplete }) {
             <motion.div
                 initial={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.18, ease: 'easeOut' }}
                 onClick={handleSkip}
                 className="fixed inset-0 z-[9999] bg-[#0F172A] flex items-center justify-center cursor-pointer overflow-hidden"
             >
@@ -127,8 +127,8 @@ export default function LoadingScreen({ onComplete }) {
                                     }
                             }
                             transition={{
-                                duration: 1,
-                                delay: i * 0.02,
+                                duration: 0.18,
+                                delay: i * 0.005,
                                 ease: 'easeOut',
                             }}
                         />
@@ -141,7 +141,7 @@ export default function LoadingScreen({ onComplete }) {
                         <motion.h1
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 1, ease: 'easeOut' }}
+                            transition={{ duration: 0.18, ease: 'easeOut' }}
                             className="text-5xl sm:text-6xl md:text-7xl font-bold mb-4 font-[family-name:var(--font-orbitron)]"
                         >
                             <span className="inline-block">
@@ -151,8 +151,8 @@ export default function LoadingScreen({ onComplete }) {
                                         initial={{ opacity: 0, y: 50, rotateX: 90 }}
                                         animate={{ opacity: 1, y: 0, rotateX: 0 }}
                                         transition={{
-                                            duration: 0.5,
-                                            delay: index * 0.05,
+                                            duration: 0.18,
+                                            delay: index * 0.01,
                                             ease: 'easeOut',
                                         }}
                                         className="inline-block bg-gradient-to-r from-cyber-purple via-neon-cyan to-cyber-purple bg-clip-text text-transparent"
@@ -172,7 +172,7 @@ export default function LoadingScreen({ onComplete }) {
                         <motion.p
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4, delay: 0.4 }}
+                            transition={{ duration: 0.18, delay: 0.05, ease: 'easeOut' }}
                             className="text-lg sm:text-xl md:text-2xl text-neon-cyan mb-8"
                         >
                             Full Stack Developer
@@ -184,7 +184,7 @@ export default function LoadingScreen({ onComplete }) {
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4, delay: 0.5 }}
+                            transition={{ duration: 0.18, delay: 0.1, ease: 'easeOut' }}
                             className="w-full max-w-md mx-auto"
                         >
                             {/* Progress Bar */}
@@ -197,7 +197,7 @@ export default function LoadingScreen({ onComplete }) {
                                     }}
                                     initial={{ width: '0%' }}
                                     animate={{ width: `${progress}%` }}
-                                    transition={{ duration: 0.3 }}
+                                    transition={{ duration: 0.15, ease: 'easeOut' }}
                                 />
 
                                 {/* Glow effect at progress point */}
@@ -218,7 +218,7 @@ export default function LoadingScreen({ onComplete }) {
                                     key={progress}
                                     initial={{ scale: 1.2 }}
                                     animate={{ scale: 1 }}
-                                    transition={{ duration: 0.2 }}
+                                    transition={{ duration: 0.1, ease: 'easeOut' }}
                                 >
                                     {progress}%
                                 </motion.span>
@@ -230,7 +230,7 @@ export default function LoadingScreen({ onComplete }) {
                     <motion.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 0.5 }}
-                        transition={{ delay: 0.5, duration: 0.6 }}
+                        transition={{ delay: 0.1, duration: 0.18, ease: 'easeOut' }}
                         className="absolute bottom-8 left-1/2 -translate-x-1/2 text-sm text-white/40"
                     >
                         Click anywhere to skip

@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from 'react';
+import { usePerformance } from './PerformanceProvider';
 
 export default function InteractiveBackground() {
     const canvasRef = useRef(null);
     const containerRef = useRef(null);
     const [activeSection, setActiveSection] = useState('hero');
     const [isMobile, setIsMobile] = useState(false);
+    const { isReduced } = usePerformance();
 
     // Configuration
     const config = {
@@ -126,7 +128,8 @@ export default function InteractiveBackground() {
         }
 
         const initParticles = () => {
-            const count = isMobile ? 50 : (densitySettings[activeSection] || 100);
+            let count = isMobile ? 50 : (densitySettings[activeSection] || 100);
+            if (isReduced) count = Math.floor(count * 0.5); // 50% less particles on low FPS
 
             // Adjust particle count smoothly
             if (Math.abs(particles.length - count) > 5) {
@@ -179,23 +182,25 @@ export default function InteractiveBackground() {
                 p.draw();
             });
 
-            drawConnections();
+            if (!isReduced) drawConnections();
 
-            // Ripples
-            ripples.forEach((ripple, index) => {
-                ripple.radius += 2;
-                ripple.opacity -= 0.02;
+            // Ripples - Only if not reduced
+            if (!isReduced) {
+                ripples.forEach((ripple, index) => {
+                    ripple.radius += 2;
+                    ripple.opacity -= 0.02;
 
-                ctx.beginPath();
-                ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
-                ctx.strokeStyle = `rgba(6, 182, 212, ${ripple.opacity})`; // Cyan ripple
-                ctx.lineWidth = 2;
-                ctx.stroke();
+                    ctx.beginPath();
+                    ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
+                    ctx.strokeStyle = `rgba(6, 182, 212, ${ripple.opacity})`; // Cyan ripple
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
 
-                if (ripple.opacity <= 0) {
-                    ripples.splice(index, 1);
-                }
-            });
+                    if (ripple.opacity <= 0) {
+                        ripples.splice(index, 1);
+                    }
+                });
+            }
 
             animationFrameId = requestAnimationFrame(animate);
         };
@@ -244,7 +249,7 @@ export default function InteractiveBackground() {
     return (
         <div ref={containerRef} className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#0a0a0f]">
             {/* Layer 2: Gradient Orbs (Behind Canvas) */}
-            <div className="absolute inset-0 opacity-40">
+            <div className={`absolute inset-0 opacity-40 ${isReduced ? 'hidden' : ''}`}>
                 <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-cyber-purple/30 rounded-full blur-[120px] animate-pulse-slow" />
                 <div className="absolute top-[50%] right-[20%] w-[400px] h-[400px] bg-neon-cyan/20 rounded-full blur-[100px] animate-float" />
                 <div className="absolute bottom-[10%] left-[30%] w-[300px] h-[300px] bg-pink-500/20 rounded-full blur-[80px] animate-pulse-slower" />

@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from 'react';
 import { motion, useSpring, useTransform } from 'framer-motion';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { useMobile } from '../hooks/useMobile';
+import { usePerformance } from './PerformanceProvider';
 
 // Card data
 const cards = [
@@ -68,20 +69,23 @@ function FloatingParticles() {
     const [mounted, setMounted] = useState(false);
     const [particles, setParticles] = useState([]);
 
+    const { isReduced } = usePerformance();
+
     useEffect(() => {
         setMounted(true);
+        const count = isReduced ? 10 : 25; // Reduce particles on low FPS
         setParticles(
-            Array.from({ length: 30 }, (_, i) => ({
+            Array.from({ length: count }, (_, i) => ({
                 id: i,
-                size: Math.random() * 3 + 1,
+                size: Math.random() * 2 + 1,
                 x: Math.random() * 100,
                 y: Math.random() * 100,
-                duration: Math.random() * 15 + 15,
-                delay: Math.random() * 2,
-                opacity: Math.random() * 0.3 + 0.1,
+                duration: Math.random() * 5 + 5, // Snappier float
+                delay: Math.random() * 1,
+                opacity: Math.random() * 0.2 + 0.1,
             }))
         );
-    }, []);
+    }, [isReduced]);
 
     if (!mounted) return null;
 
@@ -166,11 +170,9 @@ function FloatingCard({ card, index, mousePosition, isMobile }) {
             y: 0,
             scale: 1,
             transition: {
-                type: "spring",
-                stiffness: 60,
-                damping: 20,
-                mass: 1,
-                delay: index * 0.15
+                duration: 0.18,
+                ease: "easeOut",
+                delay: index * 0.05
             }
         }
     };
@@ -279,8 +281,8 @@ function FloatingCard({ card, index, mousePosition, isMobile }) {
                                     initial={{ opacity: 0, x: -10 }}
                                     animate={isInView ? { opacity: 1, x: 0 } : {}}
                                     transition={{
-                                        delay: index * 0.15 + i * 0.1 + 0.3,
-                                        duration: 0.5,
+                                        delay: index * 0.05 + i * 0.02 + 0.1,
+                                        duration: 0.18,
                                         ease: "easeOut"
                                     }}
                                     className="flex items-start gap-2 text-foreground/80 text-sm leading-relaxed"
@@ -402,7 +404,7 @@ export default function AboutSection() {
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 1, ease: "easeOut" }}
+                    transition={{ duration: 0.18, ease: "easeOut" }}
                     className="text-center mb-16"
                 >
                     <motion.h2
