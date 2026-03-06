@@ -1,178 +1,91 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono, Orbitron } from "next/font/google";
-import "./globals.css";
-import LayoutClient from "./components/LayoutClient";
+import type { Metadata } from 'next';
+import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
+import './globals.css';
+import { ThemeProvider } from './components/ThemeProvider';
+import { generatePersonSchema, generateWebSiteSchema } from '@/lib/seo';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["300", "400", "500", "600", "700"],
+const inter = Inter({
+  variable: '--font-inter',
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: '--font-plus-jakarta',
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700', '800'],
 });
 
-const orbitron = Orbitron({
-  variable: "--font-orbitron",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "500", "600", "700", "800", "900"],
-});
-
-const siteUrl = "https://omorfarukullas.vercel.app"; // Update with your actual domain
+const siteUrl = 'https://omorfarukullas.vercel.app';
 
 export const metadata: Metadata = {
-  title: "Omor Faruk Ullas | Full Stack Developer & CSE Student",
-  description: "Computer Science student at UIU passionate about building innovative solutions. Specializing in Full Stack Development with React, Node.js, and TypeScript. Currently developing MediconnectBD healthcare system.",
-  keywords: [
-    "Omor Faruk Ullas",
-    "Full Stack Developer",
-    "React Developer",
-    "Node.js",
-    "TypeScript",
-    "CSE Student",
-    "UIU",
-    "MediconnectBD",
-    "Bangladesh Developer",
-    "Football Analyst",
-    "Web Developer",
-    "Software Engineer",
-  ],
-  authors: [{ name: "Omor Faruk Ullas" }],
-  creator: "Omor Faruk Ullas",
-  publisher: "Omor Faruk Ullas",
-  metadataBase: new URL(siteUrl),
-  alternates: {
-    canonical: "/",
+  title: {
+    default: 'Omor Faruk Ullas | Full Stack Developer & CSE Student',
+    template: '%s | Omor Faruk Ullas',
   },
+  description:
+    'Computer Science student at United International University, passionate about building innovative solutions. Specializing in Full Stack Development with React, Node.js, and TypeScript.',
+  keywords: [
+    'Omor Faruk Ullas', 'Full Stack Developer', 'React Developer',
+    'Node.js', 'TypeScript', 'CSE Student', 'UIU', 'MediconnectBD',
+    'Bangladesh Developer', 'Web Developer', 'Software Engineer',
+  ],
+  authors: [{ name: 'Omor Faruk Ullas' }],
+  creator: 'Omor Faruk Ullas',
+  metadataBase: new URL(siteUrl),
+  alternates: { canonical: '/' },
   openGraph: {
-    type: "website",
-    locale: "en_US",
+    type: 'website',
+    locale: 'en_US',
     url: siteUrl,
-    siteName: "Omor Faruk Ullas Portfolio",
-    title: "Omor Faruk Ullas - Full Stack Developer",
-    description: "Computer Science student at UIU passionate about building innovative solutions. Specializing in Full Stack Development with React, Node.js, and TypeScript. Currently developing MediconnectBD healthcare system.",
-    images: [
-      {
-        url: "/og-image.png", // You'll need to create this 1200x630 image
-        width: 1200,
-        height: 630,
-        alt: "Omor Faruk Ullas - Full Stack Developer Portfolio",
-      },
-    ],
+    siteName: 'Omor Faruk Ullas Portfolio',
+    title: 'Omor Faruk Ullas — Full Stack Developer',
+    description: 'CSE student at UIU building innovative full-stack solutions.',
+    images: [{ url: '/images/og-image.png', width: 1200, height: 630, alt: 'Omor Faruk Ullas Portfolio' }],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Omor Faruk Ullas - Full Stack Developer",
-    description: "Computer Science student at UIU passionate about building innovative solutions. Specializing in Full Stack Development with React, Node.js, and TypeScript.",
-    images: ["/og-image.png"],
-    creator: "@omorfarukullas", // Update with your Twitter handle if you have one
+    card: 'summary_large_image',
+    title: 'Omor Faruk Ullas — Full Stack Developer',
+    description: 'CSE student at UIU building innovative full-stack solutions.',
+    images: ['/images/og-image.png'],
+    creator: '@omorfarukullas',
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  verification: {
-    google: "your-google-verification-code", // Add when you set up Google Search Console
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
-        {/* PWA Manifest */}
         <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-        {/* Favicons */}
-        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        {/* Prevent theme flash */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme')||((window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
+          }}
+        />
 
-        {/* Theme color for mobile browsers */}
-        <meta name="theme-color" content="#8B5CF6" />
+        {/* JSON-LD Schemas */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(generatePersonSchema()) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(generateWebSiteSchema()) }} />
+
+        {/* PWA */}
+        <meta name="theme-color" content="#7c6ee6" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
-        {/* Service Worker Registration */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js').then(
-                    function(registration) {
-                      console.log('ServiceWorker registration successful');
-                    },
-                    function(err) {
-                      console.log('ServiceWorker registration failed: ', err);
-                    }
-                  );
-                });
-              }
-            `,
-          }}
-        />
-
-        {/* JSON-LD Structured Data for Person Schema */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Person",
-              name: "Omor Faruk Ullas",
-              jobTitle: "Full Stack Developer",
-              description: "Computer Science student at UIU passionate about building innovative solutions",
-              url: siteUrl,
-              image: `${siteUrl}/og-image.png`,
-              sameAs: [
-                "https://github.com/omorfarukullas", // Update with your actual profiles
-                "https://linkedin.com/in/omorfarukullas",
-                "https://twitter.com/omorfarukullas",
-              ],
-              knowsAbout: [
-                "React",
-                "Node.js",
-                "TypeScript",
-                "JavaScript",
-                "Full Stack Development",
-                "Web Development",
-                "MediconnectBD",
-              ],
-              alumniOf: {
-                "@type": "EducationalOrganization",
-                name: "United International University",
-                sameAs: "https://www.uiu.ac.bd/",
-              },
-              nationality: {
-                "@type": "Country",
-                name: "Bangladesh",
-              },
-            }),
-          }}
-        />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} antialiased bg-background text-foreground min-h-screen`}
-      >
-        <LayoutClient>{children}</LayoutClient>
+      <body className={`${inter.variable} ${plusJakarta.variable}`}>
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

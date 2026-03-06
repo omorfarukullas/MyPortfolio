@@ -1,0 +1,105 @@
+---
+title: "Getting Started with Next.js 14 App Router"
+description: "A comprehensive guide to building modern web applications with Next.js 14 App Router, Server Components, and the new metadata API."
+date: "2025-12-15"
+author: "Omor Faruk Ullas"
+tags: ["Next.js", "React", "Web Development", "TypeScript"]
+featured_image: "/images/blog/nextjs-14.png"
+slug: "getting-started-with-nextjs-14"
+published: true
+seo_title: "Next.js 14 App Router Guide | Omor Faruk Ullas"
+seo_description: "Learn how to build production-ready web apps with Next.js 14 App Router, React Server Components, and the enhanced metadata API."
+---
+
+# Getting Started with Next.js 14 App Router
+
+Next.js 14 brings significant improvements to the App Router, making server-side rendering and full-stack development more powerful than ever. In this guide, I'll walk you through the key concepts and best practices.
+
+## What's New in Next.js 14
+
+The biggest improvements in Next.js 14 include:
+
+- **Server Actions** — Write server-side code directly in components
+- **Partial Prerendering** — Mix static and dynamic content seamlessly
+- **Improved Metadata API** — Full control over SEO and Open Graph tags
+- **Turbopack** — Drastically faster local development
+
+## Setting Up Your Project
+
+Getting started is straightforward with the create-next-app CLI:
+
+```bash
+npx create-next-app@latest my-portfolio --typescript --tailwind --app
+cd my-portfolio
+npm run dev
+```
+
+## Understanding the App Router
+
+The App Router introduces a new paradigm for routing in Next.js. Each folder in the `app/` directory represents a route segment.
+
+```
+app/
+├── layout.tsx        # Root layout
+├── page.tsx          # Home page (/)
+├── about/
+│   └── page.tsx      # /about
+└── blog/
+    ├── page.tsx      # /blog
+    └── [slug]/
+        └── page.tsx  # /blog/[slug]
+```
+
+## Server vs Client Components
+
+One of the most important concepts to understand is the distinction between Server and Client Components.
+
+**Server Components** (default):
+- Run on the server only
+- Can directly access databases, filesystems
+- Zero JavaScript bundle impact
+- Cannot use hooks or browser APIs
+
+**Client Components** (add `'use client'`):
+- Run in the browser
+- Can use React hooks, browser APIs
+- Add to the JavaScript bundle
+
+```tsx
+// Server Component — no directive needed
+async function BlogList() {
+  const posts = await getPosts(); // Direct DB access
+  return <ul>{posts.map(p => <li key={p.slug}>{p.title}</li>)}</ul>;
+}
+
+// Client Component
+'use client';
+function SearchInput() {
+  const [query, setQuery] = useState('');
+  return <input value={query} onChange={e => setQuery(e.target.value)} />;
+}
+```
+
+## Building the Metadata API
+
+Next.js 14 provides a powerful metadata API for SEO:
+
+```tsx
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'My Portfolio',
+  description: 'Full Stack Developer portfolio',
+  openGraph: {
+    title: 'My Portfolio',
+    description: 'Building innovative solutions',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+  },
+};
+```
+
+## Conclusion
+
+Next.js 14 is a major leap forward for full-stack React development. The App Router's server-first approach enables faster, more capable applications with less client-side JavaScript.
+
+I'm currently building my portfolio and MediconnectBD using these techniques — and the developer experience has been outstanding. Give Next.js 14 a try!

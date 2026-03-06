@@ -1,0 +1,109 @@
+---
+title: "Building MediconnectBD: A Smart Healthcare Platform"
+description: "The story of how I'm building a unified healthcare system for Bangladesh — the technical challenges, design decisions, and lessons learned."
+date: "2026-01-20"
+author: "Omor Faruk Ullas"
+tags: ["Healthcare", "Full Stack", "React", "Node.js", "MySQL"]
+featured_image: "/images/blog/mediconnectbd.png"
+slug: "building-mediconnectbd"
+published: true
+---
+
+# Building MediconnectBD: A Smart Healthcare Platform
+
+Healthcare in Bangladesh faces significant challenges — fragmented records, long wait times, and limited access to specialist care. MediconnectBD is my attempt to bridge these gaps with technology.
+
+## The Problem
+
+During a hospital visit with a family member, I noticed several pain points:
+
+- Patients waiting hours without knowing their queue position
+- Doctors accessing paper records, risking missing critical information
+- No easy way to find available beds across hospitals
+- Emergency response delayed by coordination failures
+
+These aren't just inconveniences — they're life-threatening inefficiencies. I decided to build a solution.
+
+## System Architecture
+
+MediconnectBD is a full-stack platform with multiple interconnected modules:
+
+```
+┌─────────────────────────────────────────┐
+│               Client Layer               │
+│ Patient App │ Doctor Portal │ Admin Panel│
+└─────────────────────────────────────────┘
+                     │
+┌─────────────────────────────────────────┐
+│              API Gateway (Express)       │
+│  Auth │ Queue │ Records │ Emergency API  │
+└─────────────────────────────────────────┘
+                     │
+┌─────────────────────────────────────────┐
+│              Database Layer              │
+│      MySQL (primary) + Redis (cache)     │
+└─────────────────────────────────────────┘
+```
+
+## Key Features Built So Far
+
+### 1. Live Queue Tracking
+
+One of the most impactful features — patients can see their real-time position in the queue:
+
+```typescript
+// Queue position update via WebSocket
+io.on('connection', (socket) => {
+  socket.on('join-queue', async ({ hospitalId, departmentId }) => {
+    const position = await queueService.getPosition(hospitalId, departmentId);
+    socket.emit('queue-update', { position, estimatedWait: position * 8 });
+  });
+});
+```
+
+### 2. Electronic Medical Records (EMR)
+
+Doctors can access and update patient records with proper authorization:
+
+```typescript
+interface MedicalRecord {
+  patientId: string;
+  visitDate: Date;
+  diagnosis: string;
+  prescriptions: Prescription[];
+  vitals: VitalSigns;
+  doctorId: string;
+}
+```
+
+### 3. Appointment System
+
+A clean booking system that respects doctor schedules and prevents double-booking:
+
+```sql
+CREATE TABLE appointments (
+  id VARCHAR(36) PRIMARY KEY,
+  patient_id VARCHAR(36) NOT NULL,
+  doctor_id VARCHAR(36) NOT NULL,
+  scheduled_at DATETIME NOT NULL,
+  status ENUM('pending', 'confirmed', 'cancelled', 'completed'),
+  UNIQUE KEY unique_slot (doctor_id, scheduled_at)
+);
+```
+
+## Lessons Learned
+
+**Database design matters from day one.** I initially used a flat table structure and had to refactor significantly when adding multi-hospital support. Now I carefully model entities before writing a single line of application code.
+
+**Real-time features need careful consideration.** WebSocket connections can get expensive at scale. I moved to a polling-with-SSE hybrid for the queue system.
+
+**Healthcare data requires extra security.** Implementing proper RBAC (Role-Based Access Control) was more complex than expected. Every API route must verify not just authentication but authorization at the resource level.
+
+## What's Next
+
+- Telemedicine module (video consultations)
+- Mobile app (React Native)
+- Integration with government health databases
+- AI-powered appointment recommendations
+
+If you're interested in contributing or have feedback, feel free to reach out!
